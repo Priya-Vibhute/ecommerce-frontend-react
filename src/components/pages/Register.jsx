@@ -1,7 +1,21 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 function Register() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm();
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
+  const password = watch("password");
+
   return (
     <main className="auth-page">
       <div className="container py-5">
@@ -12,8 +26,8 @@ function Register() {
                 <span className="section-kicker">Join the club</span>
                 <h1 className="auth-hero-title mt-3">Create your account</h1>
                 <p className="auth-hero-copy mt-3">
-                  Register to unlock faster checkout, exclusive deals, and order tracking from
-                  your personal dashboard.
+                  Register to unlock faster checkout, exclusive deals, and order
+                  tracking from your personal dashboard.
                 </p>
                 <div className="auth-points mt-4">
                   <div className="auth-point">
@@ -22,16 +36,21 @@ function Register() {
                   </div>
                   <div className="auth-point">
                     <strong>Saved preferences</strong>
-                    <span>Store sizes, addresses, and payment options securely.</span>
+                    <span>
+                      Store sizes, addresses, and payment options securely.
+                    </span>
                   </div>
                 </div>
               </div>
 
               <div className="auth-panel">
-                <form className="auth-form">
+                <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
                   <div className="row g-3">
                     <div className="col-md-6">
-                      <label className="form-label auth-label" htmlFor="firstName">
+                      <label
+                        className="form-label auth-label"
+                        htmlFor="firstName"
+                      >
                         First name
                       </label>
                       <input
@@ -39,10 +58,28 @@ function Register() {
                         type="text"
                         className="form-control auth-input"
                         placeholder="John"
+                        {...register("firstName", {
+                          required: "first Name is required",
+                          minLength: {
+                            value: 2,
+                            message: "first name must be at least 2 characters",
+                          },
+                          maxLength: {
+                            value: 60,
+                            message: "maximum characters are 60",
+                          },
+                        })}
                       />
+
+                      <small className="text-danger">
+                        {errors.firstName && errors.firstName.message}
+                      </small>
                     </div>
                     <div className="col-md-6">
-                      <label className="form-label auth-label" htmlFor="lastName">
+                      <label
+                        className="form-label auth-label"
+                        htmlFor="lastName"
+                      >
                         Last name
                       </label>
                       <input
@@ -50,12 +87,30 @@ function Register() {
                         type="text"
                         className="form-control auth-input"
                         placeholder="Doe"
+                        {...register("lastName", {
+                          required: "last name is required",
+                          minLength: {
+                            value: 2,
+                            message: "last name must be at least 2 characters",
+                          },
+                          maxLength: {
+                            value: 60,
+                            message: "maximum characters are 60",
+                          },
+                        })}
                       />
+
+                      <small className="text-danger">
+                        {errors.lastName && errors.lastName.message}
+                      </small>
                     </div>
                   </div>
 
                   <div className="mt-3">
-                    <label className="form-label auth-label" htmlFor="registerEmail">
+                    <label
+                      className="form-label auth-label"
+                      htmlFor="registerEmail"
+                    >
                       Email address
                     </label>
                     <input
@@ -63,11 +118,25 @@ function Register() {
                       type="email"
                       className="form-control auth-input"
                       placeholder="you@example.com"
+                      {...register("email", {
+                        required: "email is required",
+                        pattern: {
+                          value:
+                            /^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/,
+                          message: "Please enter a valid email address",
+                        },
+                      })}
                     />
+                    <small className="text-danger">
+                      {errors.email && errors.email.message}
+                    </small>
                   </div>
 
                   <div className="mt-3">
-                    <label className="form-label auth-label" htmlFor="registerPassword">
+                    <label
+                      className="form-label auth-label"
+                      htmlFor="registerPassword"
+                    >
                       Password
                     </label>
                     <input
@@ -75,11 +144,26 @@ function Register() {
                       type="password"
                       className="form-control auth-input"
                       placeholder="Create a password"
+                      {...register("password", {
+                        required: "password is required",
+                        pattern: {
+                          value:
+                            /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/,
+                          message:
+                            "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+                        },
+                      })}
                     />
+                    <small className="text-danger">
+                      {errors.password && errors.password.message}
+                    </small>
                   </div>
 
                   <div className="mt-3">
-                    <label className="form-label auth-label" htmlFor="confirmPassword">
+                    <label
+                      className="form-label auth-label"
+                      htmlFor="confirmPassword"
+                    >
                       Confirm password
                     </label>
                     <input
@@ -87,10 +171,22 @@ function Register() {
                       type="password"
                       className="form-control auth-input"
                       placeholder="Repeat your password"
+                      {...register("confirmPassword", {
+                        required: "confirm password is required",
+                        validate: (value) =>
+                          value == password ||
+                          "password and confirm password is not same",
+                      })}
                     />
+                    <small className="text-danger">
+                      {errors.confirmPassword && errors.confirmPassword.message}
+                    </small>
                   </div>
 
-                  <button className="btn hero-primary-btn w-100 mt-4" type="submit">
+                  <button
+                    className="btn hero-primary-btn w-100 mt-4"
+                    type="submit"
+                  >
                     Register
                   </button>
                 </form>
@@ -104,7 +200,7 @@ function Register() {
         </div>
       </div>
     </main>
-  )
+  );
 }
 
-export default Register
+export default Register;
