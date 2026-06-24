@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { api } from "../../api";
 
 function Register() {
   const {
@@ -10,8 +11,15 @@ function Register() {
     watch,
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
+    try {
+      const response = await api.post("/users", data);
+      console.log(response);
+    } catch (error) {
+      alert("Something went wrong");
+      console.log("Error", error);
+    }
   };
 
   const password = watch("password");
