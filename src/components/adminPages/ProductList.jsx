@@ -18,8 +18,16 @@ function ProductList() {
     fetchProducts();
   }, []);
 
+  // delete product
+  const deleteProduct = async (id) => {
+    const response = await api.delete(`/products/${id}`);
+    fetchProducts();
+    alert("Product deleted");
+  };
+
   return (
     <div>
+      <h2>Total Products :{products && products.length}</h2>
       {products ? (
         <div>
           <table class="table">
@@ -29,6 +37,7 @@ function ProductList() {
                 <th scope="col">name</th>
                 <th scope="col">description</th>
                 <th scope="col">price</th>
+                <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -38,6 +47,15 @@ function ProductList() {
                   <td>{p.name}</td>
                   <td>{p.description}</td>
                   <td>{p.price}</td>
+                  <td>
+                    <button className="btn btn-success m-2">Update</button>
+                    <button
+                      className="btn btn-danger m-2"
+                      onClick={() => deleteProduct(p.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
