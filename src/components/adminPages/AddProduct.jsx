@@ -14,7 +14,8 @@ function AddProduct() {
     // =============================
     try {
       const response = await api.post("/products", data);
-      console.log(response);
+      console.log(response.data);
+      alert(response.data.name + " added");
     } catch (error) {
       console.log(error);
       alert("Something went wrong");
