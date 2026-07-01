@@ -4,7 +4,8 @@ import { useForm } from "react-hook-form";
 
 function ProductList() {
   const [products, setProducts] = useState(null);
-  const [productId, setProductId] = useState(null);// step 1 
+  const [productId, setProductId] = useState(null); // step 1
+  const [categories, setCategories] = useState(null);
 
   const { handleSubmit, register, reset } = useForm();
 
@@ -18,8 +19,19 @@ function ProductList() {
     }
   };
 
+  //  To fetch categories
+  const fetchCategories = async () => {
+    try {
+      const response = await api.get("/categories");
+      setCategories(response.data);
+    } catch (error) {
+      alert("something went wrong");
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
 
   // delete product
@@ -137,7 +149,7 @@ function ProductList() {
                       data-bs-toggle="modal"
                       data-bs-target="#exampleModal"
                       onClick={() => {
-                        setProductId(p.id);// step 2
+                        setProductId(p.id); // step 2
                         reset({
                           name: p.name,
                           description: p.description,
