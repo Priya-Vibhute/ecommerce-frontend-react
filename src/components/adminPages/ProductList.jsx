@@ -23,7 +23,7 @@ function ProductList() {
   const fetchCategories = async () => {
     try {
       const response = await api.get("/categories");
-      setCategories(response.data);
+      setCategories(response.data._embedded.categories);
     } catch (error) {
       alert("something went wrong");
     }
@@ -50,6 +50,17 @@ function ProductList() {
       alert("product updated");
       fetchProducts();
     } catch (error) {}
+  };
+
+  const assignCategory = async (productId, categoryId) => {
+    try {
+      const response = await api.put(
+        `/categories/${categoryId}/products/${productId}`,
+      );
+      alert("category updated");
+    } catch (error) {
+      alert("Something went wrong");
+    }
   };
 
   return (
@@ -133,6 +144,7 @@ function ProductList() {
                 <th scope="col">name</th>
                 <th scope="col">description</th>
                 <th scope="col">price</th>
+                <th scope="col">Category</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
@@ -143,6 +155,26 @@ function ProductList() {
                   <td>{p.name}</td>
                   <td>{p.description}</td>
                   <td>{p.price}</td>
+                  <td>
+                    <div class="input-group mb-3">
+                      <select
+                        class="form-select"
+                        id="inputGroupSelect01"
+                        onChange={(e) => assignCategory(p.id, e.target.value)}
+                      >
+                        <option selected>Select Category</option>
+                        {categories &&
+                          categories.map((c) => (
+                            <option
+                              value={c.id}
+                              selected={p.category && p.category.id == c.id}
+                            >
+                              {c.id} {c.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </td>
                   <td>
                     <button
                       className="btn btn-success m-2"
