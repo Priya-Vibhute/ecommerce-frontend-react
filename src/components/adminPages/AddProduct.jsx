@@ -11,10 +11,27 @@ function AddProduct() {
 
   const onSubmit = async (data) => {
     console.log(data);
+    // data.productImage[0]
     // =============================
     try {
       const response = await api.post("/products", data);
       console.log(response.data);
+
+      const formData = new FormData();
+      formData.append("productImage", data.productImage[0]);
+
+      const responseImage = await api.post(
+        `/products/upload-image/${response.data.id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      console.log(responseImage);
+
       alert(response.data.name + " added");
     } catch (error) {
       console.log(error);
@@ -87,6 +104,19 @@ function AddProduct() {
                   <small className="text-danger">
                     {errors.price && errors.price.message}
                   </small>
+                </div>
+
+                {/* Product Image */}
+                <div class="mb-3">
+                  <label for="formFile" class="form-label">
+                    Image
+                  </label>
+                  <input
+                    class="form-control"
+                    type="file"
+                    id="formFile"
+                    {...register("productImage")}
+                  />
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100">

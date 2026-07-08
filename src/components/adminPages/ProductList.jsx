@@ -47,6 +47,17 @@ function ProductList() {
     console.log(data);
     try {
       const response = await api.put(`/products/${productId}`, data);
+
+      if (data.productImage && data.productImage.length > 0) {
+        const formData = new FormData();
+        formData.append("productImage", data.productImage[0]);
+
+        await api.post(`/products/upload-image/${productId}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
       alert("product updated");
       fetchProducts();
     } catch (error) {}
@@ -125,6 +136,19 @@ function ProductList() {
                     class="form-control"
                     id="exampleFormControlInput1"
                     {...register("price")}
+                  />
+                </div>
+
+                {/* Product Image */}
+                <div class="mb-3">
+                  <label for="formFile" class="form-label">
+                    Image
+                  </label>
+                  <input
+                    class="form-control"
+                    type="file"
+                    id="formFile"
+                    {...register("productImage")}
                   />
                 </div>
 
