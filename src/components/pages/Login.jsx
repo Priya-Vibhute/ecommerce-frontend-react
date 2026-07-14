@@ -1,7 +1,24 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext } from "react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { api } from "../../api";
+import { LoginContext } from "../../context/LoginContext";
 
 function Login() {
+  const { register, handleSubmit } = useForm();
+  const { login } = useContext(LoginContext);
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    try {
+      const response = await api.post("/auth/login", data);
+      console.log(response);
+      login(response.data.token, response.data.userDto);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <main className="auth-page">
       <div className="container py-5">
@@ -12,8 +29,8 @@ function Login() {
                 <span className="section-kicker">Welcome back</span>
                 <h1 className="auth-hero-title mt-3">Login to your account</h1>
                 <p className="auth-hero-copy mt-3">
-                  Sign in to manage orders, track deliveries, and continue shopping without
-                  missing your saved wishlist.
+                  Sign in to manage orders, track deliveries, and continue
+                  shopping without missing your saved wishlist.
                 </p>
                 <div className="auth-points mt-4">
                   <div className="auth-point">
@@ -28,9 +45,12 @@ function Login() {
               </div>
 
               <div className="auth-panel">
-                <form className="auth-form">
+                <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
                   <div className="mb-3">
-                    <label className="form-label auth-label" htmlFor="loginEmail">
+                    <label
+                      className="form-label auth-label"
+                      htmlFor="loginEmail"
+                    >
                       Email address
                     </label>
                     <input
@@ -38,11 +58,15 @@ function Login() {
                       type="email"
                       className="form-control auth-input"
                       placeholder="you@example.com"
+                      {...register("email")}
                     />
                   </div>
 
                   <div className="mb-3">
-                    <label className="form-label auth-label" htmlFor="loginPassword">
+                    <label
+                      className="form-label auth-label"
+                      htmlFor="loginPassword"
+                    >
                       Password
                     </label>
                     <input
@@ -50,13 +74,21 @@ function Login() {
                       type="password"
                       className="form-control auth-input"
                       placeholder="Enter your password"
+                      {...register("password")}
                     />
                   </div>
 
                   <div className="d-flex align-items-center justify-content-between gap-3 mb-4">
                     <div className="form-check">
-                      <input className="form-check-input" type="checkbox" id="rememberMe" />
-                      <label className="form-check-label auth-check-label" htmlFor="rememberMe">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id="rememberMe"
+                      />
+                      <label
+                        className="form-check-label auth-check-label"
+                        htmlFor="rememberMe"
+                      >
                         Remember me
                       </label>
                     </div>
@@ -79,7 +111,7 @@ function Login() {
         </div>
       </div>
     </main>
-  )
+  );
 }
 
-export default Login
+export default Login;
