@@ -80,7 +80,13 @@ function Products() {
                   <p class="card-text">{p.description}</p>
 
                   <p class="card-text">Price :{p.price}</p>
-                  <button className="btn btn-primary m-3" onClick={()=>addToCart(p.id)}> ADD to cart </button>
+                  <button
+                    className="btn btn-primary m-3"
+                    onClick={() => addToCart(p.id)}
+                  >
+                    {" "}
+                    ADD to cart{" "}
+                  </button>
                 </div>
               </div>
             </div>
